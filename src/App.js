@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import vega from "vega";
+import { vegalite } from "vega-lite";
+import vl from "vega-lite-api";
+import { Handler } from "vega-tooltip";
+// import { config } from "./config";
+// import { getData } from "./getData";
+// import { viz } from "./viz";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = async () => {
+  vl.register(vega, vegalite, {
+    // default renderer svg. Can be changed to canvas
+    view: { renderer: "svg" },
+    init: (view) => {
+      view.tooltip(new Handler().call);
+    },
+  });
+  const marks = Viz.data(await GetData())
+    .width(window.innerWidth)
+    .height(window.innerHeight)
+    .autosize({ type: "fit", contains: "padding" })
+    .config(config);
+
+  document.body.appendChild(await marks.render());
+};
 
 export default App;
